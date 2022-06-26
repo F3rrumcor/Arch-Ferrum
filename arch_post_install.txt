@@ -120,4 +120,4 @@ bspwm polybar sxhkd
 rofi dmenu
 
 ly instead of sddm
-
+xdg-ninja
