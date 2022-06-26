@@ -1,0 +1,120 @@
+# Sync clock
+sudo timedatectl set-ntp true
+
+# Wifi + Bluetooth
+sudo pacman -S network-manager-applet
+
+# Audio (pipewire)
+sudo pacman -S wireplumber pipewire pipewire-pulse pipewire-alsa pipewire-jack pavucontrol
+
+# Display driver (nvidia)
+sudo pacman -S nvidia nvidia-utils nvidia-settings
+
+# Display server (xorg)
+sudo pacman -S xorg-server
+localectl set-x11-keymap de
+
+# Display manager (sddm)
+sudo pacman -S sddm
+sudo systemctl enable sddm
+sudo systemctl start sddm
+sudo nano /usr/share/sddm/scripts/Xsetu (xrandr --output DP-0 --primary --mode 1920x1080 --rate 143.98 --pos 0x0 --rotate normal --output DP-1 --off --output HDMI-0 --off --output HDMI-1 --off --output DVI-D-0 --off)
+sudo cp /usr/lib/sddm/sddm.conf.d/default.conf /etc/sddm.conf
+sudo nano /etc/sddm.conf
+
+# Window manager (qtile)
+sudo pacman -S qtile picom nitrogen lxsession lxappearance
+
+# Terminal emulator (alacritty)
+sudo pacman -S alacritty
+
+# Text editor (gedit)
+sudo pacman -S gedit
+
+# File management
+sudo pacman -S thunar thunar-volman gvfs gvfs-smb ntfs-3g p7zip xarchiver
+
+# Automount
+sudo pacman -S udisks2 udiskie
+
+# Numlock on
+/etc/sddm.conf
+
+[General]
+...
+Numlock=on
+
+# Browser (firefox)
+sudo pacman -S firefox
+
+# Video player (celluloid)
+sudo pacman -S mpv celluloid
+
+# Screen sharing (anydesk)
+yay -S anydesk-bin
+sudo systemctl start/enable anydesk
+
+# Hibernation
+sudo nano /etc/mkinitcpio.conf HOOKS=(base udev autodetect keyboard modconf block filesystems resume fsck) # resume after udev
+sudo mkinitcpio -p linux
+sudo nano /boot/loader/entries/arch.conf (resume=UUID=)
+bootctl update
+
+# Swapfile 16GB
+sudo dd if=/dev/zero of=/swapfile bs=1M count=16384 status=progress
+sudo chmod 0600 /swapfile
+sudo mkswap -U clear /swapfile
+sudo swapon /swapfile
+
+sudo nano /etc/fstab
+^
+/swapfile none swap defaults 0 0
+
+# Install AUR package manager yay
+sudo pacman -S git
+cd /opt
+sudo git clone https://aur.archlinux.org/yay-git.git
+sudo chown -R user:group ./yay-git
+cd yay-git
+makepkg -si
+sudo pacman -R go
+
+# Enable multilib
+sudo nano /etc/pacman.conf
+
+# Kernel modules
+sudo pacman -S dkms linux-headers
+sudo dkms autoinstall
+
+# Virtualisation
+sudo pacman -S virt-manager
+
+# Layan Cursors
+mkdir -p $HOME/build
+cd "$HOME/build"
+git clone https://github.com/vinceliuice/Layan-cursors
+cd Layan-cursors
+sudo ./install.sh
+
+# Nordic-Theme
+yay -S nordic-theme
+
+# Nextcloud
+sudo pacman -S nextcloud-client
+sudo systemctl enable nextcloud-client
+
+# Keepass
+sudo pacman -S keepassxc
+
+# Gamemode
+sudo pacman -S gamemode lib32-gamemode
+
+# Logitech mouse
+sudo pacman -S piper
+
+# Pacman cheatsheet
+https://devhints.io/pacman
+
+# Maybe
+bspwm polybar sxhkd
+rofi dmenu
