@@ -1,14 +1,21 @@
 # Sync clock
 sudo timedatectl set-ntp true
 
-# Wifi + Bluetooth
-sudo pacman -S network-manager-applet
+# Enable multilib
+sudo nano /etc/pacman.conf
 
-# Audio (pipewire)
-sudo pacman -S wireplumber pipewire pipewire-pulse pipewire-alsa pipewire-jack pavucontrol
+# Kernel modules
+sudo pacman -S dkms linux-headers
+sudo dkms autoinstall
+
+# Hibernation
+sudo nano /etc/mkinitcpio.conf HOOKS=(base udev autodetect keyboard modconf block filesystems resume fsck) # resume after udev
+sudo mkinitcpio -p linux
+sudo nano /boot/loader/entries/arch.conf (resume=UUID=)
+bootctl update
 
 # Display driver (nvidia)
-sudo pacman -S nvidia nvidia-utils nvidia-settings
+sudo pacman -S --needed nvidia-dkms nvidia-utils lib32-nvidia-utils nvidia-settings vulkan-icd-loader lib32-vulkan-icd-loader
 
 # Display server (xorg)
 sudo pacman -S xorg-server
@@ -25,18 +32,6 @@ sudo nano /etc/sddm.conf
 # Window manager (qtile)
 sudo pacman -S qtile picom nitrogen lxsession lxappearance
 
-# Terminal emulator (alacritty)
-sudo pacman -S alacritty
-
-# Text editor (gedit)
-sudo pacman -S gedit
-
-# File management
-sudo pacman -S thunar thunar-volman gvfs gvfs-smb ntfs-3g p7zip xarchiver
-
-# Automount
-sudo pacman -S udisks2 udiskie
-
 # Numlock on
 /etc/sddm.conf
 
@@ -44,21 +39,39 @@ sudo pacman -S udisks2 udiskie
 ...
 Numlock=on
 
+# Audio (pipewire)
+sudo pacman -S wireplumber pipewire pipewire-pulse pipewire-alsa pipewire-jack pavucontrol
+
+# Wifi + Bluetooth
+sudo pacman -S network-manager-applet
+
+# Logitech mouse
+sudo pacman -S piper
+
+# File management
+sudo pacman -S thunar thunar-volman gvfs gvfs-smb ntfs-3g p7zip xarchiver
+
+# Automount
+sudo pacman -S udisks2 udiskie
+
+# Terminal emulator (alacritty)
+sudo pacman -S alacritty
+
+# Text editor (gedit)
+sudo pacman -S gedit
+
 # Browser (firefox)
 sudo pacman -S firefox
 
 # Video player (celluloid)
 sudo pacman -S mpv celluloid
 
-# Screen sharing (anydesk)
-yay -S anydesk-bin
-sudo systemctl start/enable anydesk
+# Nextcloud
+sudo pacman -S nextcloud-client
+sudo systemctl enable nextcloud-client
 
-# Hibernation
-sudo nano /etc/mkinitcpio.conf HOOKS=(base udev autodetect keyboard modconf block filesystems resume fsck) # resume after udev
-sudo mkinitcpio -p linux
-sudo nano /boot/loader/entries/arch.conf (resume=UUID=)
-bootctl update
+# Keepass
+sudo pacman -S keepassxc
 
 # Install AUR package manager yay
 sudo pacman -S git
@@ -69,15 +82,13 @@ cd yay-git
 makepkg -si
 sudo pacman -R go
 
-# Enable multilib
-sudo nano /etc/pacman.conf
+# Screen sharing (anydesk)
+yay -S anydesk-bin
+sudo systemctl start/enable anydesk
 
-# Kernel modules
-sudo pacman -S dkms linux-headers
-sudo dkms autoinstall
-
-# Virtualisation
-sudo pacman -S virt-manager
+# Screen sharing (teamviewer)
+yay -S teamviewer
+sudo systemctl start/enable teamviewerd
 
 # Layan Cursors
 mkdir -p $HOME/build
@@ -89,18 +100,17 @@ sudo ./install.sh
 # Nordic-Theme
 yay -S nordic-theme
 
-# Nextcloud
-sudo pacman -S nextcloud-client
-sudo systemctl enable nextcloud-client
-
-# Keepass
-sudo pacman -S keepassxc
+# Steam
+sudo pacman -S steam
 
 # Gamemode
 sudo pacman -S gamemode lib32-gamemode
 
-# Logitech mouse
-sudo pacman -S piper
+# Lutris
+sudo pacman -S lutris vkd3d lib32-vkd3d
+
+# Virtualisation
+sudo pacman -S virt-manager
 
 # Pacman cheatsheet
 https://devhints.io/pacman
