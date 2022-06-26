@@ -60,7 +60,7 @@ systemctl enable sshd
 # Microcode updates
 pacman -S amd-ucode
 
-# Bootloader
+# Bootloader (blkid | grep /dev/sda4 >> /boot/loader/entries/arch.conf)
 bootctl install
 nano /boot/loader/entries/arch.conf
 ^
