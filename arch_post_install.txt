@@ -121,3 +121,4 @@ rofi dmenu
 
 ly instead of sddm
 xdg-ninja
+nemo instead of thunar (Krusader?)
