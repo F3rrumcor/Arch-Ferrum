@@ -1,3 +1,3 @@
 # Arch-Ferrum
 
-My WIP Arch customization.
+My personal WIP custom Arch install.
