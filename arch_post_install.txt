@@ -118,3 +118,6 @@ https://devhints.io/pacman
 # Maybe
 bspwm polybar sxhkd
 rofi dmenu
+
+ly instead of sddm
+
