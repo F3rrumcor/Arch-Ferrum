@@ -1,6 +1,9 @@
 # Sync clock
 sudo timedatectl set-ntp true
 
+# Disable pc speaker
+sudo rmmod pcspkr
+
 # Enable multilib
 sudo nano /etc/pacman.conf
 
