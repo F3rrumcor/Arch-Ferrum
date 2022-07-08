@@ -3,11 +3,11 @@ sudo timedatectl set-ntp true
 
 # Disable pc speaker
 sudo nano /etc/modprobe.d/nobeep.conf
+^
+blacklist pcspkr
 
 # Enable multilib
 sudo nano /etc/pacman.conf
-^
-blacklist pcspkr
 
 # Kernel modules
 sudo pacman -S dkms linux-headers
