@@ -82,7 +82,7 @@ bootctl update
 # User and password
 useradd -mG wheel username
 passwd username
-EDITOR=nano visudo
+EDITOR=nano visudo (uncomment "%wheel ALL=(ALL:ALL) ALL")
 
 # Disable root
 passwd -l root
