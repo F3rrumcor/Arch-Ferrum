@@ -37,7 +37,7 @@ mount --mkdir /dev/sda1 /mnt/boot
 swapon /dev/sda3
 
 # Install essential packages
-pacstrap /mnt base linux linux-firmware nano networkmanager openssh 
+pacstrap /mnt base linux linux-firmware sudo nano networkmanager openssh 
 
 # Fstab
 genfstab -U /mnt >> /mnt/etc/fstab
