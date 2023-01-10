@@ -84,7 +84,7 @@ editor no
 bootctl update
 
 # User and password
-useradd -mG audio,video,wheel username
+useradd -mG audio,video,input,wheel username
 passwd username
 EDITOR=nano visudo (uncomment "%wheel ALL=(ALL:ALL) ALL")
 
