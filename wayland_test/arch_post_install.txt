@@ -1,19 +1,8 @@
 # Sync clock
 sudo timedatectl set-ntp true
 
-# Disable pc speaker
-sudo nano /etc/modprobe.d/nobeep.conf
-^
-blacklist pcspkr
-
-# Enable multilib
+# Enable multilib and color
 sudo nano /etc/pacman.conf
-
-# Hibernation
-sudo nano /etc/mkinitcpio.conf HOOKS=(base udev autodetect keyboard modconf block filesystems resume fsck) # resume after udev
-sudo mkinitcpio -p linux
-sudo nano /boot/loader/entries/arch.conf (resume=UUID=)
-sudo bootctl update
 
 # Install AUR package manager yay
 sudo pacman -S git
@@ -27,13 +16,17 @@ sudo pacman -R go
 # Display driver (intel)
 sudo pacman -S --needed mesa lib32-mesa vulkan-intel lib32-vulkan-intel vulkan-icd-loader lib32-vulkan-icd-loader
 
+# Audio (pipewire)
+sudo pacman -S wireplumber pipewire pipewire-pulse pipewire-alsa pipewire-jack pavucontrol
+
 # Window manager (hyprland)
 yay -S hyprland-bin
 yay -S xdg-desktop-portal-hyprland-git
+yay -S waybar-hyprland-git
+yay -S hyprpaper-git
 
 # enable seatd
 sudo systemctl enable seatd
-sudo systemctl start seatd
 
 # install sunshine
 yay -S sunshine
@@ -57,20 +50,20 @@ systemctl --user enable sunshine
 sudo setcap cap_sys_admin+p $(readlink -f $(which sunshine))
 
 # auto login
-cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service
-ln -s /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
-sudo nano /etc/systemd/system/autologin@.service < ExecStart=-/sbin/agetty -a USERNAME %I 38400
-sudo systemctl daemon-reload
+sudo mkdir /etc/systemd/system/getty@tty1.service.d
+sudo nano /etc/systemd/system/getty@tty1.service.d/autologin.conf
+^
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty -o '-p -f -- \\u' --noclear --autologin username %I $TERM
+---
 nano ~/.bash_profile
 ^
 if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
-    exec hyprland
+    exec Hyprland
 fi
 
-# Audio (pipewire)
-sudo pacman -S wireplumber pipewire pipewire-pulse pipewire-alsa pipewire-jack pavucontrol
-
-# File management
+# File managementpacman 
 sudo pacman -S thunar thunar-volman gvfs gvfs-smb ntfs-3g p7zip xarchiver
 
 # Terminal emulator (alacritty)
