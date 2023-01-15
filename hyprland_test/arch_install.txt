@@ -1,0 +1,76 @@
+#Arch Linux Install
+
+# Set the console keyboard layout
+loadkeys de-latin1
+
+# Update the system clock
+timedatectl set-ntp true
+
+# Partition the disks (eg EFI-ROOT-SWAP)
+lsblk (find correct disk)
+fdisk /dev/sda (g | n enter enter enter +512M | n enter enter enter -4G | n enter enter enter enter | t 1 1 t 2 20 t 3 19 | w)
+
+# Format the partitions
+mkfs.fat -F32 /dev/sda1
+mkfs.ext4 /dev/sda2
+mkswap /dev/sda3
+
+# Mount the file systems
+mount /dev/sda2 /mnt
+mount --mkdir /dev/sda1 /mnt/boot
+swapon /dev/sda3
+
+# Install essential packages
+pacstrap /mnt base base-devel linux linux-firmware nano networkmanager openssh qemu-guest-agent
+
+# Fstab
+genfstab -U /mnt >> /mnt/etc/fstab
+
+# Chroot
+arch-chroot /mnt
+
+# Time
+ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+hwclock --systohc
+
+# Localization
+nano /etc/locale.gen
+locale-gen
+echo "LANG=de_DE.UTF-8" >> /etc/locale.conf
+echo "KEYMAP=de-latin1" >> /etc/vconsole.conf
+
+# Network configuration
+echo "archway" >> /etc/hostname
+echo -e "\n127.0.0.1        localhost\n::1              localhost\n127.0.1.1        archway" >> /etc/hosts
+systemctl enable NetworkManager
+systemctl enable sshd
+
+# Microcode updates
+pacman -S intel-ucode
+
+# Bootloader (blkid | grep /dev/sda2 >> /boot/loader/entries/arch.conf)
+bootctl install
+nano /boot/loader/entries/arch.conf
+^
+title   Arch Linux
+linux   /vmlinuz-linux
+initrd  /intel-ucode.img
+initrd  /initramfs-linux.img
+options root=PARTUUID= rw quiet loglevel=3
+
+nano /boot/loader/loader.conf
+^
+default arch
+timeout 0
+console-mode max
+editor no
+
+bootctl update
+
+# User and password
+useradd -mG audio,video,input,wheel,seat username
+passwd username
+EDITOR=nano visudo (uncomment "%wheel ALL=(ALL:ALL) ALL")
+
+# Disable root
+passwd -l root
