@@ -29,6 +29,43 @@ sudo pacman -S --needed mesa lib32-mesa vulkan-intel lib32-vulkan-intel vulkan-i
 
 # Window manager (hyprland)
 yay -S hyprland-bin
+yay -S xdg-desktop-portal-hyprland-git
+
+# enable seatd
+sudo systemctl enable seatd
+sudo systemctl start seatd
+
+# install sunshine
+yay -S sunshine
+echo 'KERNEL=="uinput", GROUP="input", MODE="0660", OPTIONS+="static_node=uinput"' | sudo tee /etc/udev/rules.d/85-sunshine-input.rules
+mkdir -p ~/.config/systemd/user/
+sudo nano ~/.config/systemd/user/sunshine.service
+^
+[Unit]
+Description=Sunshine Gamestream Server for Moonlight
+After=network.target
+
+[Service]
+Restart=always
+RestartSec=30
+ExecStart=/usr/bin/sunshine
+
+[Install]
+WantedBy=default.target
+---
+systemctl --user enable sunshine
+sudo setcap cap_sys_admin+p $(readlink -f $(which sunshine))
+
+# auto login
+cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service
+ln -s /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
+sudo nano /etc/systemd/system/autologin@.service < ExecStart=-/sbin/agetty -a USERNAME %I 38400
+sudo systemctl daemon-reload
+nano ~/.bash_profile
+^
+if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
+    exec hyprland
+fi
 
 # Audio (pipewire)
 sudo pacman -S wireplumber pipewire pipewire-pulse pipewire-alsa pipewire-jack pavucontrol
