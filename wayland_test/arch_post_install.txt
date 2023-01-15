@@ -31,21 +31,6 @@ sudo systemctl enable seatd
 # install sunshine
 yay -S sunshine
 echo 'KERNEL=="uinput", GROUP="input", MODE="0660", OPTIONS+="static_node=uinput"' | sudo tee /etc/udev/rules.d/85-sunshine-input.rules
-mkdir -p ~/.config/systemd/user/
-sudo nano ~/.config/systemd/user/sunshine.service
-^
-[Unit]
-Description=Sunshine Gamestream Server for Moonlight
-After=network.target
-
-[Service]
-Restart=always
-RestartSec=30
-ExecStart=/usr/bin/sunshine
-
-[Install]
-WantedBy=default.target
----
 systemctl --user enable sunshine
 sudo setcap cap_sys_admin+p $(readlink -f $(which sunshine))
 
@@ -63,7 +48,7 @@ if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
     exec Hyprland
 fi
 
-# File managementpacman 
+# File management
 sudo pacman -S thunar thunar-volman gvfs gvfs-smb ntfs-3g p7zip xarchiver
 
 # Terminal emulator (alacritty)
