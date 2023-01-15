@@ -31,8 +31,6 @@ sudo systemctl enable seatd
 # install sunshine
 yay -S sunshine
 echo 'KERNEL=="uinput", GROUP="input", MODE="0660", OPTIONS+="static_node=uinput"' | sudo tee /etc/udev/rules.d/85-sunshine-input.rules
-systemctl --user enable sunshine
-sudo setcap cap_sys_admin+p $(readlink -f $(which sunshine))
 
 # auto login
 sudo mkdir /etc/systemd/system/getty@tty1.service.d
